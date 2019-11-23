@@ -121,9 +121,9 @@
               {% for product in product_list %}
                 <div class="col-lg-4 mb-5 col-md-6">
                   <div class="wine_v_1 text-center pb-4 pt-5">
-                    <img src={{ product.image }} alt="Image" class="img-fluid">
+                    <img src="{{ product.image }}" alt="Image" class="img-fluid">
                     {% if product.profitable %}
-                      <img src="images/profitable.png" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
+                      <img src="images/profitable.png" alt="Image" style="width:10rem;height: 10rem;position:absolute;right: -20px;top: -20px;">
                     {% endif %}
                     <div>
                       <h3 class="heading mt-3 mb-3 text-dark">{{ product.name }}</h3>
