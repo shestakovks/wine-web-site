@@ -5,12 +5,8 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def get_product_file_lines(filename):
-    with open(filename) as f:
-        return f.read().strip().split('\n')
-
-
-def get_wines_from_file(product_file_lines):
+def get_products_from_string(product_file_string):
+    product_file_lines = product_file_string.strip().split('\n')
     mapping = {
         'Название': 'name',
         'Сорт': 'grape',
@@ -19,7 +15,6 @@ def get_wines_from_file(product_file_lines):
     }
     products = defaultdict(list)
     product_subtitle = None
-    default_product_subtitle = 'Другое'
     product = {}
 
     for index, line in enumerate(product_file_lines):
@@ -32,7 +27,8 @@ def get_wines_from_file(product_file_lines):
             product[mapping[key.strip()]] = value.strip()
 
         if (not line and product) or (product and index == len(product_file_lines) - 1):
-            product_subtitle = product_subtitle or default_product_subtitle
+            if product_subtitle is None:
+                return
             products[product_subtitle].append(product)
             product = {}
 
@@ -48,8 +44,9 @@ if __name__ == '__main__':
     template = env.get_template('template.html')
 
     foundation_year = 1920
-    product_file_lines = get_product_file_lines('wine.txt')
-    products = get_wines_from_file(product_file_lines)
+    with open('wine.txt') as f:
+        product_file_string = f.read()
+    products = get_products_from_string(product_file_string)
     rendered_page = template.render(
         years_since_founded=str(datetime.date.today().year - foundation_year),
         products=products
